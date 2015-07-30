@@ -606,7 +606,10 @@ class GetOrderByPartnerOrderID(Request):
 
         :return: root element for the get order by partner order id
         """
-        root = etree.Element('GetOrderByPartnerOrderID', nsmap=utils.NS)
+        root = etree.Element(
+            'GetOrderByPartnerOrderID',
+            nsmap=utils.DEFAULT_NS
+        )
 
         query_request_header = self.request_header.serialize(
             order_type=False
