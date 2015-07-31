@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <m:OrderDetail xmlns:m="http://api.geotrust.com/webtrust/query">
+        <m:ModificationEvents>
+            <m:ModificationEvent>
+            <m:ModificationEventID>21612199</m:ModificationEventID>
+            <m:ModificationEventName>Order Created</m:ModificationEventName>
+            <m:ModificationTimestamp>2014-08-05T14:44:15+00:00</m:ModificationTimestamp>
+            </m:ModificationEvent>
+        </m:ModificationEvents>
+        <m:OrderInfo>
+            <m:PartnerOrderID>eUogDVDrbdeRelyIzDyblFgWCOeeFc</m:PartnerOrderID>
+            <m:GeoTrustOrderID>1825833</m:GeoTrustOrderID>
+            <m:DomainName>testingsymantecssl.com</m:DomainName>
+            <m:OrderDate>2014-08-05T14:44:15+00:00</m:OrderDate>
+            <m:Price>35.0</m:Price>
+            <m:Method>RESELLER</m:Method>
+            <m:OrderStatusMajor>PENDING</m:OrderStatusMajor>
+            <m:ValidityPeriod>15</m:ValidityPeriod>
+            <m:ServerCount>1</m:ServerCount>
+            <m:RenewalInd>Y</m:RenewalInd>
+            <m:ProductCode>QUICKSSLPREMIUM</m:ProductCode>
+            <m:OrderState>WF_DOMAIN_APPROVAL</m:OrderState>
+        </m:OrderInfo>
+        <m:QuickOrderDetail>
+            <m:OrderStatusMinor>
+                <m:OrderStatusMinorCode>ORDER_WAITING_FOR_APPROVAL</m:OrderStatusMinorCode>
+                <m:OrderStatusMinorName>Order Waiting For Approval</m:OrderStatusMinorName>
+            </m:OrderStatusMinor>
+            <m:OrganizationInfo>
+                <m:OrganizationName>MyOrg</m:OrganizationName>
+                <m:OrganizationAddress>
+                    <m:City>San Antonio</m:City>
+                    <m:Region>Texas</m:Region>
+                    <m:Country>US</m:Country>
+                </m:OrganizationAddress>
+            </m:OrganizationInfo>
+            <m:ApproverNotifiedDate>2014-08-05T14:44:15+00:00</m:ApproverNotifiedDate>
+            <m:ApproverEmailAddress>admin@example.com</m:ApproverEmailAddress>
+        </m:QuickOrderDetail>
+        <m:OrderContacts>
+            <m:AdminContact>
+                <m:FirstName>John</m:FirstName>
+                <m:LastName>Doe</m:LastName>
+                <m:Phone>2103122400</m:Phone>
+                <m:Email>someone@email.com</m:Email>
+                <m:Title>Caesar</m:Title>
+            </m:AdminContact>
+            <m:TechContact>
+                <m:FirstName>John</m:FirstName>
+                <m:LastName>Doe</m:LastName>
+                <m:Phone>2103122400</m:Phone>
+                <m:Email>someone@email.com</m:Email>
+                <m:Title>Caesar</m:Title>
+            </m:TechContact>
+            <m:BillingContact>
+                <m:FirstName>John</m:FirstName>
+                <m:LastName>Doe</m:LastName>
+                <m:Phone>2103122400</m:Phone>
+                <m:Email>someone@email.com</m:Email>
+                <m:Title>Caesar</m:Title>
+            </m:BillingContact>
+        </m:OrderContacts>
+        <m:AuthenticationComments />
+        <m:AuthenticationStatuses />
+    </m:OrderDetail>
