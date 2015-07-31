@@ -27,6 +27,7 @@ class OrderDetail(object):
     def __init__(self):
         self.status_code = ''
         self.status_message = ''
+        self.certificates = None
         self.organization_info = OrganizationInfo()
         self.organization_contacts = OrderContacts()
         self.modified_events = ModificationEvents()
@@ -59,21 +60,21 @@ class OrderDetail(object):
         od.organization_info = OrganizationInfo.deserialize(org_info_node)
         od.organization_contacts = OrderContacts.deserialize(org_contacts_node)
 
-        if xml_node.find('.//m:ModificationEvents', utils.NS) is not None:
-            mod_events_node = xml_node.find(
-                './/m:ModificationEvents', utils.NS
-            )
+        mod_events_node = xml_node.find('.//m:ModificationEvents', utils.NS)
+        if mod_events_node is not None:
             od.modified_events = (
                 ModificationEvents.deserialize(mod_events_node)
             )
 
-        if xml_node.find('.//m:Vulnerabilities', utils.NS) is not None:
-            vulnerability_node = xml_node.find(
-                './/m:Vulnerabilities', utils.NS
-            )
+        vulnerability_node = xml_node.find('.//m:Vulnerabilities', utils.NS)
+        if vulnerability_node is not None:
             od.vulnerabilities = (
                 Vulnerabilities.deserialize(vulnerability_node)
             )
+
+        fulfillment_node = xml_node.find('.//m:Fulfillment', utils.NS)
+        if fulfillment_node is not None:
+            od.certificates = Certificate.deserialize(fulfillment_node)
 
         return od
 

@@ -118,6 +118,7 @@ class TestOrderDetail(object):
         assert order_detail.organization_contacts, OrderContacts
         assert order_detail.organization_info, OrganizationInfo
         assert order_detail.modified_events, ModificationEvents
+        assert order_detail.certificates, Certificate
 
     def test_deserialize_with_vulnerabilities(self):
         node = test_utils.create_node_from_file('order_detail_with_vuln.xml')
@@ -136,6 +137,11 @@ class TestOrderDetail(object):
         assert order_detail.approver_email == "admin@example.com"
         assert order_detail.organization_contacts, OrderContacts
         assert order_detail.organization_info, OrganizationInfo
+
+    def test_deserialize_without_fulfillment(self):
+        node = test_utils.create_node_from_file('order_detail_no_cert.xml')
+        order_detail = OrderDetail.deserialize(node)
+        assert order_detail.certificates is None
 
 
 class TestOrderDetails(object):
