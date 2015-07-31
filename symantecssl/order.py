@@ -8,8 +8,9 @@ from symantecssl.request_models import RequestEnvelope as ReqEnv
 
 
 class FailedRequest(Exception):
-    # TODO(chellygel) Elaborate on exception data
-    pass
+    def __init__(self, response):
+        super(FailedRequest, self).__init__()
+        self.response = response
 
 
 def post_request(endpoint, request_model, credentials):
@@ -47,7 +48,7 @@ def post_request(endpoint, request_model, credentials):
 
     # Symantec not expected to return 2xx range; only 200
     if response.status_code != 200:
-        raise FailedRequest()
+        raise FailedRequest(response)
     xml_root = etree.fromstring(response.content)
     deserialized = request_model.response_model.deserialize(xml_root)
     setattr(response, "model", deserialized)
