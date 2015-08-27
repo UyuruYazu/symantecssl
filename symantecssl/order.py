@@ -117,6 +117,7 @@ def post_request_treq(treq, endpoint, request_model, credentials):
 
     @_after(treq.post(endpoint, serialized_xml, headers=headers))
     def posted(response):
+
         @_after(treq.content(response))
         def content(response_content):
             deserialized = _parse_response(request_model, response,
