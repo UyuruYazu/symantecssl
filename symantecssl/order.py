@@ -78,6 +78,7 @@ def post_request(endpoint, request_model, credentials):
 
     :param endpoint: Symantec endpoint to hit directly
     :param request_model: request model instance to initiate call type
+    :type request_model: :obj:`symantecssl.request_models.Request`
     :param credentials: Symantec specific credentials for orders.
     :return response: deserialized response from API
     """
