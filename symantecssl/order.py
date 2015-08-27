@@ -13,6 +13,51 @@ class FailedRequest(Exception):
         self.response = response
 
 
+def _prepare_request(request_model, credentials):
+    """
+    Prepare the request for execution.
+
+    :param request_model: an object with a ``serialize`` method that returns
+        some LXML Etrees.
+    :param dict credentials: A dictionary containing the following keys:
+
+            - ``partner_code``
+
+            - ``username``
+
+            - ``password``
+
+    :return: a 2-tuple of C{bytes} - the contents of the request and C{dict}
+             mapping C{bytes} to C{bytes} - the HTTP headers for the request.
+    """
+    request_model.set_credentials(**credentials)
+    model = ReqEnv(request_model=request_model)
+    serialized_xml = etree.tostring(model.serialize(), pretty_print=True)
+    headers = {'Content-Type': 'application/soap+xml'}
+
+    return (serialized_xml, headers)
+
+
+def _parse_response(request_model, response, status_code, response_content):
+    """
+    Parse a response from Symantec.
+
+    :param request_model: an object with a ``response_model`` attribute,
+        representing the request that this response maps to.
+    :param response: An HTTP response object; used only to instantiate
+        :obj:`FailedRequest`.
+    :param int status_code: The HTTP status code of the response.
+    :param bytes response_content: The bytes of the response.
+
+    :return: some LXML DOM nodes.
+    """
+    # Symantec not expected to return 2xx range; only 200
+    if status_code != 200:
+        raise FailedRequest(response)
+    xml_root = etree.fromstring(response_content)
+    return request_model.response_model.deserialize(xml_root)
+
+
 def post_request(endpoint, request_model, credentials):
     """Create a post request against Symantec's SOAPXML API.
 
@@ -36,21 +81,12 @@ def post_request(endpoint, request_model, credentials):
     :param credentials: Symantec specific credentials for orders.
     :return response: deserialized response from API
     """
-
-    request_model.set_credentials(**credentials)
-    model = ReqEnv(request_model=request_model)
-    serialized_xml = etree.tostring(model.serialize(), pretty_print=True)
-
-    headers = {'Content-Type': 'application/soap+xml'}
-
+    serialized_xml, headers = _prepare_request(request_model, credentials)
     response = requests.post(endpoint, serialized_xml, headers=headers)
     setattr(response, "model", None)
-
-    # Symantec not expected to return 2xx range; only 200
-    if response.status_code != 200:
-        raise FailedRequest(response)
-    xml_root = etree.fromstring(response.content)
-    deserialized = request_model.response_model.deserialize(xml_root)
+    deserialized = _parse_response(request_model, response,
+                                   response.status_code, response.content)
     setattr(response, "model", deserialized)
-
     return response
+
+
