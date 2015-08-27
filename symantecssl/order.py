@@ -114,6 +114,7 @@ def post_request_treq(treq, endpoint, request_model, credentials):
              attribute on it, or failing with ``FailedRequest``.
     """
     serialized_xml, headers = _prepare_request(request_model, credentials)
+
     @_after(treq.post(endpoint, serialized_xml, headers=headers))
     def posted(response):
         @_after(treq.content(response))
