@@ -90,3 +90,35 @@ def post_request(endpoint, request_model, credentials):
     return response
 
 
+def _after(something):
+    def decorator(decoratee):
+        return something.addCallback(decoratee)
+    return decorator
+
+
+def post_request_treq(treq, endpoint, request_model, credentials):
+    """
+    Like ``post_request``, but using the Twisted HTTP client in ``treq``.
+
+    :param treq: the ``treq`` module to use; either the treq module itself or
+        an HTTPClient with an added ``.content`` attribute like
+        ``treq.content``.
+    :param text_type endpoint: the URL of the full Symantec endpoint for either
+        orders or queries
+    :param request_model: the request to issue to symantec.
+    :type request_model: :obj:`symantecssl.request_models.Request`
+
+    :return: a Deferred firing with an instance of the appropriate response
+             model for ``request_model`` looked up via the ``.response_model``
+             attribute on it, or failing with ``FailedRequest``.
+    """
+    serialized_xml, headers = _prepare_request(request_model, credentials)
+    @_after(treq.post(endpoint, serialized_xml, headers=headers))
+    def posted(response):
+        @_after(treq.content(response))
+        def content(response_content):
+            deserialized = _parse_response(request_model, response,
+                                           response.code, response_content)
+            return deserialized
+        return content
+    return posted
