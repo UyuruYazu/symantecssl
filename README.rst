@@ -31,6 +31,11 @@ If you have any questions about our implementation here, please feel free
 to ask but the most reliable source of truth is the Symantec API documentation
 itself.
 
+UPDATE AS OF AUGUST 6 2015:
+Symantec has released their own version of a python library as well as
+documentation on the SOAP XML api at the following website:
+https://developers.websecurity.symantec.com
+
 
 The calls currently implemented are as follows:
 
@@ -46,17 +51,24 @@ Post Request
 
 The post request is used to execute an order or query against Symantec's API.
 
-This call will take an endpoint which must be specific to the type of request
-you wish to make. Symantec has an endpoint for Orders and a separate endpoint
-for Queries. This call also requires the user to set their credentials with
-Symantec as a part of the call.
+This call requires the following:
 
-Finally, the order or query object must be sent as well to complete the call.
-The object must have the data set before making the post call. Once the request
-is made, the library will create the XML and send it to Symantec via Python
-Requests library.
+* endpoint: an order or query endpoint (can be found in documentation)
+* order_or_query_object: an object with required order/query information
+  to be translated to SOAP XML and then passed to Symantec's endpoint.
+* credentials: a dictionary with required login information to be passed to
+  Symantec. (Items are partner_code, username, and password)
 
 .. code-block::
+
+    endpoint = "http://{symantec_endpoint_here}/orders"
+    order_or_query_object = QueryObject()
+    # Set object values here!
+    credentials = {
+        'partner_code': # Your partner_code,
+        'username': # Your username,
+        'password': # Your password
+    }
 
     post_request(endpoint, order_or_query_object, credentials)
 
