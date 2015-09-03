@@ -4,7 +4,7 @@ from lxml import etree
 
 import pytest
 
-from symantecssl.order import FailedRequest, post_request
+from symantecssl.order import FailedRequest, post_request, post_request_treq
 from symantecssl.request_models import GetModifiedOrderRequest
 from tests.unit import utils as test_utils
 
@@ -56,3 +56,37 @@ class TestPostRequest(object):
             post_request(
                 endpoint, request_model, credentials
             )
+
+
+class TestTreqRequest(object):
+
+    def test_successful_post_request(self):
+        pytest.importorskip("treq")
+        from treq.testing import (StubTreq,
+                                  StringStubbingResource,
+                                  RequestSequence)
+        credentials = {
+            "partner_code": "123456",
+            "username": "Krieg",
+            "password": "TrainConductor"
+        }
+        errors = []
+        from mock import ANY
+        sequence_stubs = RequestSequence(
+            [((ANY, ANY, ANY, ANY, ANY),
+              (200, {}, etree.tostring(
+                  test_utils.create_node_from_file('get_order_by_poid.xml')
+              )))],
+            errors.append
+        )
+        stub_treq = StubTreq(StringStubbingResource(sequence_stubs))
+        with sequence_stubs.consume(errors.append):
+            d = post_request_treq(stub_treq,
+                                  "https://symantec.endpoint.example.com",
+                                  GetModifiedOrderRequest(),
+                                  credentials)
+            responses = []
+            d.addCallback(responses.append)
+            d.addErrback(errors.append)
+            assert len(responses) == 1
+        assert errors == []
